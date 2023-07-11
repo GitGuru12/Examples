@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Dijkstra(Dictionary<int, Dictionary<int, int>> graph, int startNode, int endNode)
+    {
+        int nodeCount = graph.Count;
+
+        int[] distances = new int[nodeCount];
+        bool[] visited = new bool[nodeCount];
+        int[] previousNodes = new int[nodeCount];
+
+        for (int i = 0; i < nodeCount; i++)
+        {
+            distances[i] = int.MaxValue;
+            visited[i] = false;
+            previousNodes[i] = -1;
+        }
+
+        distances[startNode] = 0;
+
+        for (int i = 0; i < nodeCount - 1; i++)
+        {
+            int currentNode = GetMinDistanceNode(distances, visited);
+            visited[currentNode] = true;
+
+            if (currentNode == endNode)
+                break;
+
+            if (graph.ContainsKey(currentNode))
+            {
+                foreach (var neighbor in graph[currentNode])
+                {
+                    int neighborNode = neighbor.Key;
+                    int edgeWeight = neighbor.Value;
+                    int newDistance = distances[currentNode] + edgeWeight;
+
+                    if (newDistance < distances[neighborNode])
+                    {
+                        distances[neighborNode] = newDistance;
+                        previousNodes[neighborNode] = currentNode;
+                    }
+                }
